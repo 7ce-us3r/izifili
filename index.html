@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Izifili - Filigrane Gratuit et Sécurisé (100% Local)</title>
+<meta name="description" content="Protégez vos documents avec Izifili. Ajoutez un filigrane à vos PDF et images gratuitement. Traitement 100% local sans aucun envoi de données sur serveur.">
+<meta name="keywords" content="filigrane, watermark, gratuit, pdf, image, local, no log, sécurité, izifili">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="Izifili - Filigrane 100% Local">
+<meta property="og:description" content="Ajoutez un filigrane sur vos documents sans qu'ils ne quittent votre ordinateur.">
+<meta property="og:url" content="https://izifili.com">
+<meta property="og:type" content="website">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<style>
+:root{--primary:#10b981;--primary-dark:#059669;--bg:#f8fafc;--text:#1e293b;--success:#059669;--panel:#ffffff;--border:#e2e8f0;--label:#475569;--notice-bg:#ecfdf5;--notice-text:#065f46;--notice-border:#a7f3d0}
+[data-theme="dark"]{--bg:#0f172a;--text:#f1f5f9;--panel:#1e293b;--border:#334155;--label:#cbd5e1;--notice-bg:#064e3b;--notice-text:#a7f3d0;--notice-border:#059669}
+body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);max-width:800px;margin:0 auto;padding:2rem;line-height:1.6;transition:background 0.3s,color 0.3s}
+.header-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+#langSelect{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:0.5rem;border-radius:8px;font-size:0.9rem;cursor:pointer}
+.theme-toggle{background:none;border:none;color:var(--text);padding:0.5rem;cursor:pointer;opacity:0.6;transition:opacity 0.2s}
+.theme-toggle:hover{opacity:1}
+.theme-toggle svg{width:20px;height:20px;fill:currentColor}
+.container{background:var(--panel);padding:2.5rem;border-radius:16px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);border:1px solid var(--border)}
+h1{color:var(--text);text-align:center;margin-bottom:2rem;font-weight:800;font-size:2.2rem}
+h1 span{color:var(--primary)}
+.notice{background:var(--notice-bg);color:var(--notice-text);padding:1.2rem;border-radius:10px;font-size:0.95rem;margin-bottom:2rem;border:1px solid var(--notice-border);display:flex;align-items:center;gap:10px}
+.input-wrapper{width:100%;padding:0.8rem;margin-bottom:1.5rem;border:2px solid var(--border);border-radius:8px;box-sizing:border-box;background:var(--panel);color:var(--text);transition:border-color 0.2s}
+.input-wrapper:focus-within{border-color:var(--primary)}
+label{display:block;margin-bottom:0.6rem;font-weight:600;color:var(--label)}
+input[type="file"]{border:none;background:none;padding:0;margin:0;width:100%;cursor:pointer}
+input[type="file"]::-webkit-file-upload-button{visibility:hidden;width:0}
+input[type="file"]::before{content:attr(data-browse);display:inline-block;background:var(--primary);border-radius:5px;padding:0.3rem 0.8rem;outline:none;white-space:nowrap;-webkit-user-select:none;cursor:pointer;font-weight:600;font-size:0.9rem;color:white;margin-right:0.5rem}
+input[type="file"]:hover::before{background:var(--primary-dark)}
+input[type="text"]{border:none;background:none;padding:0;margin:0;width:100%;color:var(--text);font-size:1rem}
+input[type="text"]:focus{outline:none}
+#processBtn{background:var(--primary);color:white;border:none;padding:1.1rem;border-radius:8px;font-size:1.1rem;font-weight:700;cursor:pointer;width:100%;transition:transform 0.1s,background 0.2s}
+#processBtn:hover{background:var(--primary-dark)}
+#processBtn:active{transform:scale(0.98)}
+#download-area{margin-top:2rem;text-align:center;display:none;padding:2rem;background:#f0fdf4;border-radius:12px;border:2px solid var(--success)}
+[data-theme="dark"] #download-area{background:#064e3b}
+#download-link{display:inline-block;background:var(--success);color:white;text-decoration:none;padding:1rem 2rem;border-radius:8px;font-weight:bold;margin-top:1rem}
+.seo-content{margin-top:4rem;padding:2rem;border-top:1px solid var(--border);color:#64748b;font-size:0.95rem}
+[data-theme="dark"] .seo-content{color:#94a3b8}
+.seo-content h2{color:#334155;font-size:1.4rem}
+[data-theme="dark"] .seo-content h2{color:#e2e8f0}
+</style>
+</head>
+<body>
+<div class="header-controls">
+<select id="langSelect">
+<option value="fr">🇫🇷 FR</option>
+<option value="en">🇺🇸 EN</option>
+<option value="de">🇩🇪 DE</option>
+</select>
+<button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 15a5 5 0 100-10 5 5 0 000 10zM10 2a1 1 0 100 2 1 1 0 000-2zM10 16a1 1 0 100 2 1 1 0 000-2zM4.222 4.222a1 1 0 101.414 1.414 1 1 0 00-1.414-1.414zM14.364 14.364a1 1 0 101.414 1.414 1 1 0 00-1.414-1.414zM2 10a1 1 0 102 0 1 1 0 00-2 0zM16 10a1 1 0 102 0 1 1 0 00-2 0zM4.222 15.778a1 1 0 101.414-1.414 1 1 0 00-1.414 1.414zM14.364 5.636a1 1 0 101.414-1.414 1 1 0 00-1.414 1.414z"/></svg>
+</button>
+</div>
+<div class="container">
+<h1 id="mainTitle">Izifili<span>.</span></h1>
+<div class="notice">
+<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m0 0v2m0-2h2m-2 0H10m11-3V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-3zM7 9h.01M11 9h.01M15 9h.01"></path></svg>
+<div id="noticeText"><strong>Confidentialité garantie :</strong> Vos documents ne quittent jamais votre navigateur. Le traitement est 100% local.</div>
+</div>
+<label id="labelFile" for="fileInput">1. Sélectionnez votre document (PDF, JPG, PNG)</label>
+<div class="input-wrapper">
+<input type="file" id="fileInput" accept=".pdf, image/png, image/jpeg" data-browse="Choisir un fichier">
+</div>
+<label id="labelText" for="watermarkText">2. Texte à appliquer</label>
+<div class="input-wrapper">
+<input type="text" id="watermarkText" placeholder="Ex: DOCUMENT DE TRAVAIL" value="">
+</div>
+<button id="processBtn">Appliquer le filigrane</button>
+<div id="download-area">
+<p id="successText" style="color:var(--success); font-weight:bold; margin:0;">✨ Traitement terminé avec succès !</p>
+<a id="download-link" href="#">Télécharger le fichier sécurisé</a>
+</div>
+</div>
+<article class="seo-content" id="seoContent">
+<h2>Pourquoi utiliser Izifili pour vos filigranes ?</h2>
+<p>L'ajout d'un <strong>filigrane gratuit</strong> est une étape essentielle pour protéger l'usurpation d'identité et sécuriser l'envoi de documents sensibles. Contrairement aux outils en ligne classiques, <strong>Izifili</strong> garantit une sécurité totale : vos fichiers ne sont jamais téléchargés sur un serveur distant.</p>
+<p>Grâce à notre technologie de traitement local, votre navigateur effectue lui-même la modification. C'est la solution idéale pour respecter la protection de vos données personnelles (RGPD) tout en bénéficiant d'un outil simple, rapide et sans inscription.</p>
+</article>
+<script>
+const _0x1a=document.documentElement,_0x2b=document.getElementById('themeToggle');const _0x2c='<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 15a5 5 0 100-10 5 5 0 000 10zM10 2a1 1 0 100 2 1 1 0 000-2zM10 16a1 1 0 100 2 1 1 0 000-2zM4.222 4.222a1 1 0 101.414 1.414 1 1 0 00-1.414-1.414zM14.364 14.364a1 1 0 101.414 1.414 1 1 0 00-1.414-1.414zM2 10a1 1 0 102 0 1 1 0 00-2 0zM16 10a1 1 0 102 0 1 1 0 00-2 0zM4.222 15.778a1 1 0 101.414-1.414 1 1 0 00-1.414 1.414zM14.364 5.636a1 1 0 101.414-1.414 1 1 0 00-1.414 1.414z"/></svg>';const _0x2d='<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>';_0x2b.addEventListener('click',()=>{const e=_0x1a.getAttribute('data-theme')==='dark'?'light':'dark';_0x1a.setAttribute('data-theme',e);_0x2b.innerHTML=e==='dark'?_0x2c:_0x2d});const _0x3c={fr:{title:"Izifili. Gratuit et Sécurisé",mainTitle:"Izifili<span>.</span>",notice:"<strong>Confidentialité garantie :</strong> Vos documents ne quittent jamais votre navigateur. Le traitement est 100% local.",labelFile:"1. Sélectionnez votre document (PDF, JPG, PNG)",browse:"Choisir un fichier",labelText:"2. Texte à appliquer",placeholderText:"Ex: DOCUMENT DE TRAVAIL",btnText:"Appliquer le filigrane",success:"✨ Traitement terminé avec succès !",dlLink:"Télécharger le fichier sécurisé",seo:'<h2>Pourquoi utiliser Izifili pour vos filigranes ?</h2><p>L\'ajout d\'un <strong>filigrane gratuit</strong> est une étape essentielle pour protéger l\'usurpation d\'identité et sécuriser l\'envoi de documents sensibles. Contrairement aux outils en ligne classiques, <strong>Izifili</strong> garantit une sécurité totale : vos fichiers ne sont jamais téléchargés sur un serveur distant.</p><p>Grâce à notre technologie de traitement local, votre navigateur effectue lui-même la modification. C\'est la solution idéale pour respecter la protection de vos données personnelles (RGPD) tout en bénéficiant d\'un outil simple, rapide et sans inscription.</p>',alertFile:"Veuillez choisir un fichier.",alertFormat:"Format non supporté."},en:{title:"Izifili - Free and Secure Watermark (100% Local)",mainTitle:"Izifili<span>.</span>",notice:"<strong>Guaranteed Privacy:</strong> Your documents never leave your browser. Processing is 100% local.",labelFile:"1. Select your document (PDF, JPG, PNG)",browse:"Choose File",labelText:"2. Text to apply",placeholderText:"Ex: DRAFT",btnText:"Apply Watermark",success:"✨ Processing completed successfully!",dlLink:"Download secured file",seo:'<h2>Why use Izifili for your watermarks?</h2><p>Adding a <strong>free watermark</strong> is an essential step to protect identity theft and secure the sending of sensitive documents. Unlike classic online tools, <strong>Izifili</strong> guarantees total security: your files are never uploaded to a remote server.</p><p>Thanks to our local processing technology, your browser performs the modification itself. This is the ideal solution to respect the protection of your personal data (GDPR) while benefiting from a simple, fast tool and without registration.</p>',alertFile:"Please choose a file.",alertFormat:"Unsupported format."},de:{title:"Izifili - Kostenloses und sicheres Wasserzeichen (100% lokal)",mainTitle:"Izifili<span>.</span>",notice:"<strong>Garantierte Privatsphäre:</strong> Ihre Dokumente verlassen niemals Ihren Browser. Die Verarbeitung erfolgt zu 100% lokal.",labelFile:"1. Wählen Sie Ihr Dokument aus (PDF, JPG, PNG)",browse:"Datei auswählen",labelText:"2. Anzuwendender Text",placeholderText:"Z.B.: ENTWURF",btnText:"Wasserzeichen anwenden",success:"✨ Verarbeitung erfolgreich abgeschlossen!",dlLink:"Gesicherte Datei herunterladen",seo:'<h2>Warum Izifili für Ihre Wasserzeichen verwenden?</h2><p>Das Hinzufügen eines <strong>kostenlosen Wasserzeichens</strong> ist ein wesentlicher Schritt, um Identitätsdiebstahl zu verhindern und den Versand sensibler Dokumente zu sichern. Im Gegensatz zu klassischen Online-Tools garantiert <strong>Izifili</strong> absolute Sicherheit: Ihre Dateien werden niemals auf einen Remote-Server hochgeladen.</p><p>Dank unserer lokalen Verarbeitungstechnologie führt Ihr Browser die Änderung selbst durch. Dies isty die ideale Lösung, um den Schutz Ihrer personenbezogenen Daten (DSGVO) zu gewährleisten und gleichzeitig von einem einfachen, schnellen Tool ohne Registrierung zu profitieren.</p>',alertFile:"Bitte wählen Sie eine Datei aus.",alertFormat:"Nicht unterstütztes Format."}};function _0x4d(e){const t=_0x3c[e];document.title=t.title;document.getElementById('mainTitle').innerHTML=t.mainTitle;document.getElementById('noticeText').innerHTML=t.notice;document.getElementById('labelFile').innerText=t.labelFile;document.getElementById('fileInput').setAttribute('data-browse',t.browse);document.getElementById('labelText').innerText=t.labelText;document.getElementById('watermarkText').placeholder=t.placeholderText;document.getElementById('processBtn').innerText=t.btnText;document.getElementById('successText').innerText=t.success;document.getElementById('download-link').innerText=t.dlLink;document.getElementById('seoContent').innerHTML=t.seo}document.getElementById('langSelect').addEventListener('change',e=>_0x4d(e.target.value));const _0x4f22=async()=>{const fileInput=document.getElementById('fileInput'),watermarkText=document.getElementById('watermarkText'),downloadArea=document.getElementById('download-area'),downloadLink=document.getElementById('download-link'),lang=_0x3c[document.getElementById('langSelect').value];if(!fileInput.files.length)return alert(lang.alertFile);const selectedFile=fileInput.files[0];const originalName=selectedFile.name;let finalWatermark=watermarkText.value||"Izifili";if(finalWatermark.length<20)finalWatermark=(finalWatermark+"   ").repeat(3).trim();downloadArea.style.display='none';try{if(selectedFile.type==='application/pdf')await _0x55a1(selectedFile,finalWatermark,downloadLink,originalName);else if(selectedFile.type.startsWith('image/'))await _0x11b2(selectedFile,finalWatermark,downloadLink,originalName);else return alert(lang.alertFormat);downloadArea.style.display='block'}catch(i){alert('Error.')}};const _0x55a1=async(selectedFile,watermarkText,downloadLink,originalName)=>{const r=await selectedFile.arrayBuffer(),o=await PDFLib.PDFDocument.load(r),a=o.getPages(),{rgb:c,degrees:i}=PDFLib,s=c(0.4,0.4,0.4),l=c(0.06,0.72,0.5);a.forEach(e=>{const{width:n,height:r}=e.getSize(),o=Math.sqrt(n**2+r**2),a=(watermarkText.length*8)+60,c=120;let p=0;for(let g=-o;g<o*1.5;g+=c){p++;const d=(p%2===0)?s:l,f=(p%2===0)?0:a/2;for(let m=-o;m<o*1.5;m+=a){e.drawText(watermarkText,{x:m+f,y:g,size:16,color:d,opacity:0.2,rotate:i(45)})}}});const p=await o.save(),g=new Blob([p],{type:'application/pdf'});downloadLink.href=URL.createObjectURL(g);downloadLink.download='izifili_'+originalName};const _0x11b2=async(selectedFile,watermarkText,downloadLink,originalName)=>{return new Promise(r=>{const o=new Image();o.onload=()=>{const a=document.createElement('canvas');a.width=o.width,a.height=o.height;const c=a.getContext('2d');c.drawImage(o,0,0);const i=Math.max(14,a.width/40);c.font=`bold ${i}px sans-serif`,c.textBaseline='top';const s=c.measureText(watermarkText).width,l=s+i*2,p=i*6;c.save(),c.rotate(-Math.PI/4);const g=Math.sqrt(a.width**2+a.height**2);let d=0;for(let f=-g;f<g*1.5;f+=p){d++;c.fillStyle=(d%2===0)?'rgba(100,100,100,0.2)':'rgba(16,185,129,0.2)';const m=(d%2===0)?0:l/2;for(let u=-g;u<g*1.5;u+=l)c.fillText(watermarkText,u+m,f)}c.restore(),a.toBlob(e=>{downloadLink.href=URL.createObjectURL(e),downloadLink.download='izifili_'+originalName||'image.png',r()},'image/png')},o.src=URL.createObjectURL(selectedFile)})};document.getElementById('processBtn').addEventListener('click',_0x4f22);
+</script>
+</body>
+</html>
