@@ -13,7 +13,7 @@ Izifili est un outil web ultra-simple conçu pour protéger la confidentialité 
 **La solution Izifili :** Vos documents ne quittent JAMAIS votre ordinateur. Tout le traitement est effectué localement dans votre navigateur grâce au JavaScript.
 
 <p align="center">
-  <a href="https://izifili.com"><strong> Essayer Izifili.com</strong></a>
+  <a href="https://izifili.com"><strong> Essayer Izifili</strong></a>
 </p>
 
 ---
